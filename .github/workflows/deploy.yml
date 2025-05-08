@@ -1,46 +1,44 @@
-name: Deploy to GitHub Pages
-
+name: Deploy
+# execute workflow after push to main
 on:
-  # Trigger the workflow every time you push to the `main` branch
-  # Using a different branch name? Replace `main` with your branch’s name
   push:
-    branches: [ solution ]
-  # Allows you to run this workflow manually from the Actions tab on GitHub.
-  workflow_dispatch:
-  
-# Allow this job to clone the repo and create a page deployment
+    branches: [main]  
+#necessary perms
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
+  contents: read          
+  pages: write          
+  id-token: write         
+#build with astro and deploy to gh pages
 jobs:
-  build:
+  #build the site, using node as package manager
+  astro-build:
+    name: Build astro site
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
+      - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Use latest Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 'latest'
-          cache: 'npm'
+          node-version: '18'
+          cache: npm
       - name: Install dependencies
-        run: npm install
-      - name: Build Astro
+        run: npm ci
+      - name: Build with Astro
         run: npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3 
+      - name: Create artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
-  deploy:
-    needs: build
+  publish-site:
+    name: Publish to GitHub Pages
+    needs: astro-build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy using GitHub Pages 
+        id: deploy
         uses: actions/deploy-pages@v4
+
