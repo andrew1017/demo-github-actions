@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "astro-check": "astro check",
-    "astro-build": "astro build",
-    "build": "npm run astro-check && npm run astro-build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -16,6 +14,7 @@
     "@astrojs/prefetch": "^0.2.1",
     "@astrojs/sitemap": "^3.1.4",
     "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vercel": "^7.5.4",
     "astro": "^4.7.1",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5"
