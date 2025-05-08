@@ -1,0 +1,25 @@
+name: Deploy
+# triggered on push to main branch
+on: 
+  push:
+    branches: main
+# deploy job builds and deploys site to github pages
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      #clone repo and install node
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      #install node dependencies and build
+      - run: npm ci
+      - run: npm run build
+      #deploy dist/ to pages branch, use github auto-generated token
+      - uses: peaceiris/actions-gh-pages@v3  
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  
+          publish_dir: ./dist 
+
+
